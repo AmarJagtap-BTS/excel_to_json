@@ -1,16 +1,33 @@
 import os
 
+# Try to import Streamlit for secrets support
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    HAS_STREAMLIT = False
+
+def get_config_value(key, default=""):
+    """Get configuration value from Streamlit secrets or environment variables"""
+    # Priority: Streamlit secrets > Environment variables > Default
+    if HAS_STREAMLIT:
+        try:
+            return st.secrets.get(key, os.getenv(key, default))
+        except (FileNotFoundError, KeyError):
+            return os.getenv(key, default)
+    return os.getenv(key, default)
+
 class Config:
     """Configuration for Azure OpenAI and RAG system"""
     
-    # Azure OpenAI Configuration - Use environment variables
-    AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT", "")
-    AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "")
-    AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION", "2025-01-01-preview")
+    # Azure OpenAI Configuration - Use Streamlit secrets or environment variables
+    AZURE_OPENAI_ENDPOINT = get_config_value("AZURE_OPENAI_ENDPOINT")
+    AZURE_OPENAI_API_KEY = get_config_value("AZURE_OPENAI_API_KEY")
+    AZURE_OPENAI_API_VERSION = get_config_value("AZURE_OPENAI_API_VERSION", "2025-01-01-preview")
     
     # Deployment names
-    EMBEDDING_DEPLOYMENT = os.getenv("EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
-    CHAT_DEPLOYMENT = os.getenv("CHAT_DEPLOYMENT", "gpt-4o-mini")
+    EMBEDDING_DEPLOYMENT = get_config_value("EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
+    CHAT_DEPLOYMENT = get_config_value("CHAT_DEPLOYMENT", "gpt-4o-mini")
     
     # Embedding configuration
     EMBEDDING_DIMENSION = 3072  # text-embedding-3-large dimension
