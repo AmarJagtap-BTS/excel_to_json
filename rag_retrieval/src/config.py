@@ -12,9 +12,13 @@ def get_config_value(key, default=""):
     # Priority: Streamlit secrets > Environment variables > Default
     if HAS_STREAMLIT:
         try:
-            return st.secrets.get(key, os.getenv(key, default))
-        except (FileNotFoundError, KeyError, AttributeError):
-            return os.getenv(key, default)
+            # Try to access Streamlit secrets
+            if hasattr(st, 'secrets') and key in st.secrets:
+                return st.secrets[key]
+        except Exception:
+            pass
+    
+    # Fallback to environment variables
     return os.getenv(key, default)
 
 class ConfigMeta(type):
@@ -70,8 +74,20 @@ class Config(metaclass=ConfigMeta):
     @classmethod
     def validate(cls):
         """Validate that required configuration is set"""
+        errors = []
+        
         if not cls.AZURE_OPENAI_ENDPOINT:
-            raise ValueError("AZURE_OPENAI_ENDPOINT not set in configuration")
+            errors.append("AZURE_OPENAI_ENDPOINT not set")
         if not cls.AZURE_OPENAI_API_KEY:
-            raise ValueError("AZURE_OPENAI_API_KEY not set in configuration")
+            errors.append("AZURE_OPENAI_API_KEY not set")
+        
+        if errors:
+            error_msg = "Configuration errors:\n- " + "\n- ".join(errors)
+            error_msg += "\n\nPlease configure secrets in Streamlit Cloud:"
+            error_msg += "\n1. Go to your app settings"
+            error_msg += "\n2. Click 'Secrets' in the sidebar"
+            error_msg += "\n3. Add the required configuration values"
+            error_msg += "\n\nSee secrets.toml.example for the format."
+            raise ValueError(error_msg)
+        
         return True
