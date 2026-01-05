@@ -13,21 +13,36 @@ def get_config_value(key, default=""):
     if HAS_STREAMLIT:
         try:
             return st.secrets.get(key, os.getenv(key, default))
-        except (FileNotFoundError, KeyError):
+        except (FileNotFoundError, KeyError, AttributeError):
             return os.getenv(key, default)
     return os.getenv(key, default)
 
-class Config:
+class ConfigMeta(type):
+    """Metaclass to make Config class attributes dynamic"""
+    
+    _cache = {}
+    
+    def __getattribute__(cls, name):
+        # Dynamic config values
+        config_map = {
+            'AZURE_OPENAI_ENDPOINT': ('AZURE_OPENAI_ENDPOINT', ''),
+            'AZURE_OPENAI_API_KEY': ('AZURE_OPENAI_API_KEY', ''),
+            'AZURE_OPENAI_API_VERSION': ('AZURE_OPENAI_API_VERSION', '2025-01-01-preview'),
+            'EMBEDDING_DEPLOYMENT': ('EMBEDDING_DEPLOYMENT', 'text-embedding-3-large'),
+            'CHAT_DEPLOYMENT': ('CHAT_DEPLOYMENT', 'gpt-4o-mini'),
+        }
+        
+        if name in config_map:
+            cache_key = f'config_{name}'
+            if cache_key not in cls._cache:
+                key, default = config_map[name]
+                cls._cache[cache_key] = get_config_value(key, default)
+            return cls._cache[cache_key]
+        
+        return super().__getattribute__(name)
+
+class Config(metaclass=ConfigMeta):
     """Configuration for Azure OpenAI and RAG system"""
-    
-    # Azure OpenAI Configuration - Use Streamlit secrets or environment variables
-    AZURE_OPENAI_ENDPOINT = get_config_value("AZURE_OPENAI_ENDPOINT")
-    AZURE_OPENAI_API_KEY = get_config_value("AZURE_OPENAI_API_KEY")
-    AZURE_OPENAI_API_VERSION = get_config_value("AZURE_OPENAI_API_VERSION", "2025-01-01-preview")
-    
-    # Deployment names
-    EMBEDDING_DEPLOYMENT = get_config_value("EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
-    CHAT_DEPLOYMENT = get_config_value("CHAT_DEPLOYMENT", "gpt-4o-mini")
     
     # Embedding configuration
     EMBEDDING_DIMENSION = 3072  # text-embedding-3-large dimension
