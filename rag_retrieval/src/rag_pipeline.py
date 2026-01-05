@@ -28,12 +28,6 @@ class RAGPipeline:
         logger.info("Initializing RAG Pipeline")
         Config.validate()
         
-        # Validate required credentials are set
-        if not Config.AZURE_OPENAI_ENDPOINT:
-            raise ValueError("AZURE_OPENAI_ENDPOINT not configured. Please set it in .streamlit/secrets.toml")
-        if not Config.AZURE_OPENAI_API_KEY:
-            raise ValueError("AZURE_OPENAI_API_KEY not configured. Please set it in .streamlit/secrets.toml")
-        
         self.client = AzureOpenAI(
             api_key=Config.AZURE_OPENAI_API_KEY,
             api_version=Config.AZURE_OPENAI_API_VERSION,

@@ -4,35 +4,14 @@ __pycache__/
 *$py.class
 *.so
 .Python
-*.egg-info/
-dist/
-build/
-
-# Virtual Environment
-venv/
-env/
-.venv/
-ENV/
-
-# Streamlit
-.streamlit/secrets.toml
-rag_retrieval/.streamlit/secrets.toml
-
-# Data files
 *.pkl
 *.faiss
-data/embeddings.pkl
-data/vector_store.faiss
-data/*_metadata.pkl
-rag_retrieval/data/*.pkl
-rag_retrieval/data/*.faiss
 
-# Excel input files (optional - uncomment if you don't want to track input files)
-# input/*.xlsx
-# input/*.xls
-
-# Output files (optional - uncomment if you don't want to track outputs)
-# output/*.json
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
 
 # IDE
 .vscode/
@@ -44,20 +23,14 @@ rag_retrieval/data/*.faiss
 # OS
 .DS_Store
 Thumbs.db
-*.bak
 
-# Logs
-*.log
+# Data files
+rag_retrieval/data/*.pkl
+rag_retrieval/data/*.faiss
+rag_retrieval/src/data/*.pkl
+rag_retrieval/src/data/*.faiss
 
-# Environment variables
+# Secrets and Environment
 .env
-.env.local
-
-# Test files
-test_*.py
-*_test.py
-
-# Temporary files
-tmp/
-temp/
-*.tmp
+.streamlit/secrets.toml
+rag_retrieval/.streamlit/secrets.toml
