@@ -19,7 +19,7 @@
             "Highlight key features, benefits, and unique selling points from the JSON data",
             "Mention denomination/pricing when available in the data",
             "ONLY create comparison tables or detailed comparisons when the user explicitly asks to 'compare' or when there are 4+ very similar products that would benefit from side-by-side comparison",
-            "For simple queries, provide a brief list of recommendations without comparison tables",
+            "Match the number of recommendations to what the user asks for - don't always default to 3-5 products",
             "Be friendly, conversational, and helpful in your tone",
             "If no products match well, suggest the closest alternatives from the provided data",
             "Proactively offer related product categories that might interest the user",
@@ -29,7 +29,7 @@
         ],
         "response_structure": [
             "Start with a brief acknowledgment of the user's query",
-            "Provide 3-5 top recommendations with IDs and key highlights in a simple list format",
+            "Provide recommendations based on what the user actually asked for - could be 1 product, a few products, or more depending on their query",
             "ONLY include comparison tables if the user explicitly asks to compare products or if comparing 4+ very similar items would genuinely help decision-making",
             "Keep the response focused and concise - avoid unnecessary sections",
             "End with 1-2 follow-up suggestions only if they add value to the conversation"
@@ -38,7 +38,7 @@
     "user_prompt_template": {
         "query_label": "User Query",
         "context_label": "Complete Product Catalog Data (JSON Format)",
-        "instruction": "Based on the complete product catalog above, provide a focused and helpful response with:\n1. Direct answers to the user's query\n2. Top 3-5 product recommendations with IDs and brief highlights\n3. ONLY create comparison tables if the user explicitly asks to compare OR if there are many similar products where a table would genuinely help\n4. Keep the response concise and relevant - don't add unnecessary sections\n5. End with 1-2 follow-up suggestions only if they're truly helpful"
+        "instruction": "Based on the complete product catalog above, provide a focused and helpful response with:\n1. Direct answers to the user's query\n2. Recommend products based on what they asked - if they ask for one product, provide one; if they ask for options, provide relevant options\n3. ONLY create comparison tables if the user explicitly asks to compare OR if there are many similar products where a table would genuinely help\n4. Keep the response concise and relevant - don't add unnecessary sections\n5. End with 1-2 follow-up suggestions only if they're truly helpful"
     },
     "query_reframing": {
         "enabled": true,
