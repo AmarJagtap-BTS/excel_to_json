@@ -24,11 +24,7 @@ env/
 .DS_Store
 Thumbs.db
 
-# Data files
-rag_retrieval/data/*.pkl
-rag_retrieval/data/*.faiss
-rag_retrieval/src/data/*.pkl
-rag_retrieval/src/data/*.faiss
+
 
 # Secrets and Environment
 .env
