@@ -4,8 +4,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-*.pkl
-*.faiss
 
 # Virtual Environment
 .venv/
@@ -24,9 +22,13 @@ env/
 .DS_Store
 Thumbs.db
 
-
-
 # Secrets and Environment
 .env
 .streamlit/secrets.toml
 rag_retrieval/.streamlit/secrets.toml
+
+# Exclude cached files except in rag_retrieval/data/
+*.pkl
+*.faiss
+!rag_retrieval/data/*.pkl
+!rag_retrieval/data/*.faiss
